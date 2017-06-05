@@ -100,7 +100,8 @@ Now just enjoy FIWARE.
 
 ## How to play with it
 
-Firstly, be sure that you have installed curl program and jq.
+Firstly, be sure that you have installed [curl](https://curl.haxx.se/) program 
+and [jq](https://stedolan.github.io/jq/download/).
 
 The first thing that you have to do is register a new service in the IoT Agent
 
