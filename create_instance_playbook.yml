@@ -1,0 +1,22 @@
+---
+
+- hosts: localhost
+  connection: local
+  vars_files:
+    - vars/main.yml
+  tasks:
+  - name: Create a new IoT Hackathon instance
+    os_server:
+      state: "{{ instance_state }}"
+      name: "{{ servername }}"
+      image: "{{ imageid }}"
+      key_name: "{{ key_name }}"
+      timeout: 200
+      flavor: 3
+      network: "{{ network_internal_name }}"
+      security_groups: "{{ secgroup }}"
+      floating_ip_pools: "{{ network_external_name }}"
+      meta:
+        hostname: "{{ hostname }}"
+        ansible_host_groups: iotweek
+    register: iotweek

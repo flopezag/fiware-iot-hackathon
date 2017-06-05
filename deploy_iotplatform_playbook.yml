@@ -1,0 +1,110 @@
+---
+# ------------------------
+# Deploy the general stuff
+# ------------------------
+- hosts: "{{ hostname }}"
+  become: yes
+  # strategy: debug
+
+  vars_files:
+    - vars/main.yml
+ 
+  pre_tasks:
+    - name: Update APT cache
+      apt: update_cache=yes
+
+  tasks:
+    # General tasks
+    # - name: install virtualenv
+    #   apt: name=python-virtualenv state=present update_cache=yes
+
+    - name: disable net.ipv6.conf.all.disable_ipv6
+      sysctl: name=net.ipv6.conf.all.disable_ipv6 value=1 state=present
+
+    - name: disable net.ipv6.conf.default.disable_ipv6
+      sysctl: name=net.ipv6.conf.default.disable_ipv6 value=1 state=present
+ 
+    - name: disable net.ipv6.conf.lo.disable_ipv6
+      sysctl: name=net.ipv6.conf.lo.disable_ipv6 value=1 state=present
+
+    - name: distribute host file
+      template: src=templates/hosts.j2 dest=/etc/hosts
+
+    # Install prerequisites
+    - name: Install apt-transport-https, ca-certificates, curl, software-properties-common, ppa-purge
+      apt: name={{ item }} update_cache=yes state=latest
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - ppa-purge
+
+    - name: Download gpg key
+      command: curl -fsSL -o /home/ubuntu/gpg https://download.docker.com/linux/ubuntu/gpg
+
+    - name: Add apt key
+      command: apt-key add /home/ubuntu/gpg
+
+    - name: Apt key fingerprint
+      command: apt-key fingerprint 0EBFCD88
+
+    - name: Check lsb_release
+      command: lsb_release -cs
+      register: lsb_rel
+
+    - name: Check uname -s
+      command: uname -s
+      register: uname_s
+
+    - name: Check uname -m
+      command: uname -m
+      register: uname_m
+
+    - debug:
+        msg: "{{ lsb_rel.stdout }}"
+
+    - debug:
+        msg: "{{ uname_s.stdout }}"
+
+    - debug:
+        msg: "{{ uname_m.stdout }}"
+
+    - name: Add apt-key repository
+      command: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu "{{ lsb_rel.stdout }}" stable"
+
+    - name: Update repositories cache
+      apt:
+        update_cache: yes
+
+    - name: Install docker-ce
+      apt: name={{ item }} update_cache=yes state=latest
+      with_items:
+        - docker-ce
+
+    - name: Install docker-compose
+      command: curl -o /usr/local/bin/docker-compose -L https://github.com/docker/compose/releases/download/1.13.0/docker-compose-"{{ uname_s.stdout }}"-"{{ uname_m.stdout }}"
+
+    # change permission to a file
+    - name: Changing perm of "/usr/local/bin/docker-compose", adding "+x"
+      file: dest=/usr/local/bin/docker-compose mode=a+x
+
+    - name: Delete unused files
+      file: path=/home/ubuntu/gpg state=absent
+
+    - name: Check docker version
+      command: docker -v
+      register: docker
+
+    - name: Check docker-compose version
+      command: docker-compose -v
+      register: docker_compose
+
+    - debug:
+        msg: "{{ docker.stdout }}"
+
+    - debug:
+        msg: "{{ docker_compose.stdout }}"
+
+    - name: Deploy docker compose file
+      template: src=templates/docker-compose.yml.j2 dest=/home/ubuntu/docker-compose.yml

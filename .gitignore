@@ -1,0 +1,14 @@
+# IDE
+.idea
+
+# Virtual Environment python
+env/
+
+# OpenStack credential file
+.openrc
+
+# Key pair file from OpenStack
+*.pem
+
+# Ansible temporal execution files
+*.retry
