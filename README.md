@@ -17,6 +17,7 @@ the following web sites:
 - [IoT Agent for OMA-LWM2M (CoAP transport)](https://github.com/telefonicaid/lightweightm2m-iotagent)
 - [Short Term Historic (Comet)](https://fiware-sth-comet.readthedocs.io/en/latest/)
 
+
 ## How to start it
 
 - Create virtualenv and activate it:
@@ -95,7 +96,6 @@ In the directory /home/ubuntu in which is located the file docker-compose.yml.
 
 Now just enjoy FIWARE.
 
-```
 
 ## How to play with it
 
@@ -222,6 +222,7 @@ curl -X GET \
   -H 'fiware-service: openiot' \
   -H 'fiware-servicepath: /' | jq
 ```  
+
 
 ## License
 
