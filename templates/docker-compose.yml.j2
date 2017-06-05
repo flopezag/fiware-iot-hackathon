@@ -32,3 +32,16 @@ iotagent-ul:
         - "7896:7896"
         - "4041:4041"
 
+sth-comet:
+  image: fiware/sth-comet
+  hostname: sth-comet
+  container_name: sth-comet
+  links:
+    - mongodb
+  expose:
+    - "8666"
+  ports:
+    - "8666:8666"
+  environment:
+    - STH_HOST=0.0.0.0
+    - DB_URI=mongodb:27017
