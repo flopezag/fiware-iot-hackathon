@@ -81,7 +81,8 @@ ansible-playbook -i localhost_inventory --private-key=<YOUR SSH KEY> create_inst
 for the ssh-server on the nodes to start, therefore if you get an initial ssh-error, 
 wait a few minutes and try again).
 ```
-ansible-playbook -i openstack_inventory.py --user=ubuntu --private-key=<YOUR SSH KEY.pem>  deploy_iotplatform_playbook.yml
+ansible-playbook -i openstack_inventory.py --user=ubuntu --private-key=<YOUR SSH KEY.pem> \
+ deploy_iotplatform_playbook.yml
 ```
 - Once this has finished successfully your IoT Platform instance server is ready to use. You can access
 your instance through the execution of the command:
@@ -104,7 +105,8 @@ Firstly, be sure that you have installed curl program and jq.
 The first thing that you have to do is register a new service in the IoT Agent
 
 ```  
-curl -H "Content-type: application/json" -H "Fiware-Service: openiot" -H "Fiware-ServicePath: /" http://<IP of your FIWARE Lab Instance>:4041/iot/services -d '{
+curl -H "Content-type: application/json" -H "Fiware-Service: openiot" -H "Fiware-ServicePath: /" \ 
+http://<IP of your FIWARE Lab Instance>:4041/iot/services -d '{
  "services": [
    {
      "apikey":      "4jggokgpepnvsb2uv4s40d59ov",
@@ -119,7 +121,8 @@ curl -H "Content-type: application/json" -H "Fiware-Service: openiot" -H "Fiware
 You can check now the new created service through the following command:
 
 ```
-curl -H "Content-type: application/json" -H "Fiware-Service: openiot" -H "Fiware-ServicePath: /" http://<IP of your FIWARE Lab Instance>:4041/iot/services | jq
+curl -H "Content-type: application/json" -H "Fiware-Service: openiot" -H "Fiware-ServicePath: /" \ 
+http://<IP of your FIWARE Lab Instance>:4041/iot/services | jq
 ```
 
 Now, you have to register the sensor (devices), which type and which values should receive from it.
@@ -155,13 +158,15 @@ curl http://<IP of your FIWARE Lab Instance>:4041/iot/devices \
 To check the information of the device, just execute the sentence:
 
 ```
-curl -H "Content-type: application/json" -H "Fiware-Service: openiot" -H "Fiware-ServicePath: /" http://<IP of your FIWARE Lab Instance>:4041/iot/devices | jq
+curl -H "Content-type: application/json" -H "Fiware-Service: openiot" -H "Fiware-ServicePath: /" \ 
+http://<IP of your FIWARE Lab Instance>:4041/iot/devices | jq
 ```
 
 Now, we can subscribe the Short Term Historical data (FIWARE STH-Commet) to store the different context 
 information that we send to the Orion Context Broker. Just execute the following sentence:
 ```
-curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "Fiware-Service: openiot" -H "Fiware-ServicePath: /" -H "Cache-Control: no-cache" -d '{
+curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "Fiware-Service: openiot" \ 
+-H "Fiware-ServicePath: /" -H "Cache-Control: no-cache" -d '{
     "entities": [
         {
             "type": "thing",
@@ -183,18 +188,20 @@ curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -
         }
     ]
 }' "http://<IP of your FIWARE Lab Instance>:1026/v1/subscribeContext"
-``
+```
  
 Now, you can send context information in the Ultralight 2.0 format through HTTP using the following sentence:
 
 ```
-curl "http://<IP of your FIWARE Lab Instance>:7896/iot/d?k=4jggokgpepnvsb2uv4s40d59ov&i=my_device_01" -d 't|37#l|1200' -H "Content-type: text/plain"
+curl "http://<IP of your FIWARE Lab Instance>:7896/iot/d?k=4jggokgpepnvsb2uv4s40d59ov&i=my_device_01" \ 
+-d 't|37#l|1200' -H "Content-type: text/plain"
 ```
 
 And you can recover the current context information from Orion Context Broker through the following command:
 
 ```
-curl http://<IP of your FIWARE Lab Instance>:1026/ngsi10/queryContext -H "Content-type: application/json" -H "Fiware-Service: openiot" -d '{
+curl http://<IP of your FIWARE Lab Instance>:1026/ngsi10/queryContext -H "Content-type: application/json" \ 
+-H "Fiware-Service: openiot" -d '{
    "entities": [
        {
            "type": "", 
@@ -208,8 +215,11 @@ curl http://<IP of your FIWARE Lab Instance>:1026/ngsi10/queryContext -H "Conten
 
 Just send 2 more context information with similar senteces like:
 ```
-curl "http://130.206.115.154:7896/iot/d?k=4jggokgpepnvsb2uv4s40d59ov&i=my_device_01" -d 't|38#l|1200' -H "Content-type: text/plain"
-curl "http://130.206.115.154:7896/iot/d?k=4jggokgpepnvsb2uv4s40d59ov&i=my_device_01" -d 't|39#l|1200' -H "Content-type: text/plain"
+curl "http://130.206.115.154:7896/iot/d?k=4jggokgpepnvsb2uv4s40d59ov&i=my_device_01" -d 't|38#l|1200' \ 
+-H "Content-type: text/plain"
+
+curl "http://130.206.115.154:7896/iot/d?k=4jggokgpepnvsb2uv4s40d59ov&i=my_device_01" -d 't|39#l|1200' \ 
+-H "Content-type: text/plain"
 ```
 
 Now, you can get some aggregated data from temperature executing the following command:
