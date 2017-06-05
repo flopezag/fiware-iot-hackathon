@@ -1,0 +1,34 @@
+mongodb:
+  image: mongo:3.2
+  hostname: mongodb
+  container_name: mongodb
+  command: --nojournal
+  expose:
+    - "27017"
+ 
+orion:
+    image: fiware/orion:latest
+    hostname: orion
+    container_name: orion
+    links:
+        - mongodb
+    expose:
+        - "1026"
+    ports:
+        - "1026:1026"
+    command: -dbhost mongodb
+
+iotagent-ul:
+    image: fiware/iotagent-ul:develop
+    hostname: iotagent-ul
+    container_name: iotagent-ul
+    links:
+        - mongodb:mongo
+        - orion
+    expose:
+        - "7896"
+        - "4041"
+    ports:
+        - "7896:7896"
+        - "4041:4041"
+

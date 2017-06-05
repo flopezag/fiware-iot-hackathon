@@ -1,0 +1,39 @@
+---
+# Set to absent to take down machines
+instance_state: present
+
+# The name of the key pair you will use to log in
+# as set in OpenStack (see the FIWARE Lab security dashboard)
+key_name: iotweek
+
+# Id of the networks to run in (can be found in the FIWARE Lab
+# dashboard)
+network_internal_name: node-int-net-01
+network_external_name: public-ext-net-01
+
+# Name of the user used to install everything
+# on the remote systems
+user: ubuntu
+
+# Id of the base image to be used (can be found in the FIWARE Lab
+# dashboard)
+imageid: 2a9630d7-2328-4bbd-bbe7-e125c7008558
+
+# Name of the security group used in the creation of the instance
+secgroup: iotweek,default
+
+# Hostname
+hostname: iotweek
+
+# Server name
+servername: iotweek
+
+# Identity service in the FIWARE Lab node
+# Data should be taken from the .openrc file except the
+# administrator credentials
+auth_url: <keystone server url>
+region_name: <region name>
+username: <admin user name>
+password: <admin password>
+project_name: <admin project name>
+project_domain_name: <project domain name>

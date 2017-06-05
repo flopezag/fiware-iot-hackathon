@@ -1,0 +1,4 @@
+pip
+ansible==2.1.2.0
+python-openstackclient==3.4.1
+shade==1.13.2
