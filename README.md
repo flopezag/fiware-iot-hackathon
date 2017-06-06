@@ -52,8 +52,7 @@ export PS1='(`basename \"$VIRTUAL_ENV`)[\u@FIWARE Lab \W(keystone_user)]\$ '
 ```
 - Source your OpenStack RC file: `source <path to rc file>`. This will load information 
 about you OpenStack Setup into your environment.
-- Create the security group for spark. Since spark will start some services on random 
-ports this will allow all tcp traffic within the security group:
+- Create the security group for your virtual machine:
 ```
 openstack security group create <YOUR SEC. GROUP NAME> --description "internal security group for IoT Hackathon"
 openstack security group rule create iotweek --protocol tcp --dst-port 22
@@ -123,7 +122,7 @@ You can check now the new created service through the following command:
 
 ```
 curl -H "Content-type: application/json" -H "Fiware-Service: openiot" -H "Fiware-ServicePath: /" \ 
-http://<IP of your FIWARE Lab Instance>:4041/iot/services | jq
+http://<IP of your FIWARE Lab Instance>:4041/iot/services | jq .
 ```
 
 Now, you have to register the sensor (devices), which type and which values should receive from it.
@@ -160,7 +159,7 @@ To check the information of the device, just execute the sentence:
 
 ```
 curl -H "Content-type: application/json" -H "Fiware-Service: openiot" -H "Fiware-ServicePath: /" \ 
-http://<IP of your FIWARE Lab Instance>:4041/iot/devices | jq
+http://<IP of your FIWARE Lab Instance>:4041/iot/devices | jq .
 ```
 
 Now, we can subscribe the Short Term Historical data (FIWARE STH-Commet) to store the different context 
@@ -231,7 +230,7 @@ curl -X GET \
   -H 'cache-control: no-cache' \
   -H 'content-type: application/json' \
   -H 'fiware-service: openiot' \
-  -H 'fiware-servicepath: /' | jq
+  -H 'fiware-servicepath: /' | jq .
 ```  
 
 
